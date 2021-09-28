@@ -20,6 +20,10 @@ class MainViewModel : ViewModel() {
     val error_message: LiveData<String?>
         get() = _error_message
 
+    private val _navigate_to_details: MutableLiveData<Asteroid?> = MutableLiveData(null)
+    val navigate_to_details: LiveData<Asteroid?>
+        get() = _navigate_to_details
+
     fun getAsteroids() {
         _error_message.value = null
         viewModelScope.launch {
@@ -30,5 +34,13 @@ class MainViewModel : ViewModel() {
                 _error_message.value = T.message
             }
         }
+    }
+
+    fun mainToDetailsNavigated() {
+        _navigate_to_details.value = null
+    }
+
+    fun onAsteroidItemClicked(asteroid: Asteroid) {
+        _navigate_to_details.value = asteroid
     }
 }
