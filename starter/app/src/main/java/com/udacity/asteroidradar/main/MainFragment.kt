@@ -41,10 +41,9 @@ class MainFragment : Fragment() {
             asteroid?.let {
                 this.findNavController().navigate(MainFragmentDirections.actionShowDetail(asteroid))
                 viewModel.mainToDetailsNavigated()
+
             }
         })
-
-
 
         binding.asteroidRecycler.adapter = asteroidsAdapter
 
@@ -61,9 +60,13 @@ class MainFragment : Fragment() {
             Log.e(TAG, "Error getting asteroids: {${errorMessage}}")
         })
 
+        viewModel.pod.observe(viewLifecycleOwner, Observer {
+            Log.i(TAG, "Picture ID has changed to: ${it?.url}")
+        })
 
-
+        viewModel.getPOD()
         viewModel.getAsteroids()
+
         return binding.root
     }
 
