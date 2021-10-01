@@ -1,25 +1,28 @@
 package com.udacity.asteroidradar.main
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
-import com.udacity.asteroidradar.api.RetrofitAsteroidsInstance
-import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.apipod.RetrofitPODInstance
+import com.udacity.asteroidradar.database.getDatabase
+import com.udacity.asteroidradar.repository.AsteroidRepository
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 private const val TAG = "MainViewModel"
 
 
-class MainViewModel : ViewModel() {
-    private val _asteroids: MutableLiveData<ArrayList<Asteroid>> = MutableLiveData()
-    val asteroids: LiveData<ArrayList<Asteroid>>
-        get() = _asteroids
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val database = getDatabase(application)
+
+    private val asteroidRepository = AsteroidRepository(database)
+
+    val asteroids: LiveData<List<Asteroid>> = asteroidRepository.asteroids
 
     private val _error_message: MutableLiveData<String?> = MutableLiveData(null)
     val error_message: LiveData<String?>
@@ -33,16 +36,20 @@ class MainViewModel : ViewModel() {
     val pod: LiveData<PictureOfDay?>
         get() = _pod
 
+    private val _is_fetching_asteroids: MutableLiveData<Boolean> = MutableLiveData(false)
+    val is_fetching_asteroids: LiveData<Boolean> = _is_fetching_asteroids
+
     fun getAsteroids() {
+        _is_fetching_asteroids.value = true
         _error_message.value = null
         viewModelScope.launch {
             try {
-                val asteroidJSON = JSONObject(RetrofitAsteroidsInstance.api.getAsteroids())
-                _asteroids.value = parseAsteroidsJsonResult(asteroidJSON)
+                asteroidRepository.updateAsteroids()
             } catch (T: Throwable) {
                 _error_message.value = T.message
             }
         }
+        _is_fetching_asteroids.value = false
     }
 
     fun mainToDetailsNavigated() {
@@ -53,17 +60,20 @@ class MainViewModel : ViewModel() {
         _navigate_to_details.value = asteroid
     }
 
-    fun getPOD(){
+    fun getPOD() {
         _pod.value = null
         viewModelScope.launch {
             try {
                 _pod.value = RetrofitPODInstance.api.getPOD()
                 Log.i(TAG, "POD JSON retrieved: data ${pod.value}")
 
-            }
-            catch (T: Throwable){
+            } catch (T: Throwable) {
                 Log.e(TAG, "Unable to get POD, reason: ${T.message}")
             }
         }
+    }
+
+    init {
+        getAsteroids()
     }
 }

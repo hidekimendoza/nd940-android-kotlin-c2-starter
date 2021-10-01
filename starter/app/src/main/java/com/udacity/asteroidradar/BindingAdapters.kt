@@ -1,20 +1,31 @@
 package com.udacity.asteroidradar
 
+import android.util.Log
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.squareup.picasso.Picasso
 
 @BindingAdapter("pictureOfDayUpdate")
-fun updatePictureOfDay(imageView: ImageView, pod: PictureOfDay?){
+fun updatePictureOfDay(imageView: ImageView, pod: PictureOfDay?) {
     pod?.let {
-        if (pod.mediaType == "video"){
+        Log.i("POD", "${pod}")
+        if (pod.mediaType == "video") {
             Picasso.get().load(it.thumbnailUrl).error(R.drawable.asteroid_safe).into(imageView)
-        }
-        else{
+        } else {
             Picasso.get().load(it.url).error(R.drawable.asteroid_safe).into(imageView)
         }
         imageView.contentDescription = pod.title
+    }
+}
+
+@BindingAdapter("setStatusAsteroidsProgressBar")
+fun setAsteroidsProgressBar(progressBar: ProgressBar, status: Boolean) {
+    if (status) {
+        progressBar.visibility = ProgressBar.VISIBLE
+    } else {
+        progressBar.visibility = ProgressBar.GONE
     }
 }
 

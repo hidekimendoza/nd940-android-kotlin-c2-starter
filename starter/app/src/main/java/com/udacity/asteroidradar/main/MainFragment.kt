@@ -41,7 +41,6 @@ class MainFragment : Fragment() {
             asteroid?.let {
                 this.findNavController().navigate(MainFragmentDirections.actionShowDetail(asteroid))
                 viewModel.mainToDetailsNavigated()
-
             }
         })
 
@@ -55,7 +54,7 @@ class MainFragment : Fragment() {
         })
 
         viewModel.error_message.observe(viewLifecycleOwner, Observer { errorMessage ->
-            Toast.makeText(context, "Error trying to get data $errorMessage", Toast.LENGTH_SHORT)
+            Toast.makeText(context, "Error trying to get data $errorMessage", Toast.LENGTH_LONG)
                 .show()
             Log.e(TAG, "Error getting asteroids: {${errorMessage}}")
         })
@@ -65,7 +64,6 @@ class MainFragment : Fragment() {
         })
 
         viewModel.getPOD()
-        viewModel.getAsteroids()
 
         return binding.root
     }
