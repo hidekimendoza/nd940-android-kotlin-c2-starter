@@ -22,9 +22,7 @@ class AsteroidRepository(val asteroidDatabase: AsteroidDatabase) {
 
     suspend fun updateAsteroids(){
         withContext(Dispatchers.IO){
-            Log.i("Hideki", "Start")
             val asteroidsString = RetrofitAsteroidsInstance.api.getAsteroids()
-            Log.i("Hideki", asteroidsString)
             val asteroids = AsteroidContainer(parseAsteroidsJsonResult(JSONObject(asteroidsString)))
             asteroidDatabase.asteroidDao.insertAllAsteroids(*asteroids.asDatabaseModel())
         }
