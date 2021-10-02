@@ -2,10 +2,7 @@ package com.udacity.asteroidradar.main
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfTheDay
 import com.udacity.asteroidradar.database.getDatabase
@@ -14,15 +11,30 @@ import kotlinx.coroutines.launch
 
 private const val TAG = "MainViewModel"
 
+enum class AsteroidFilter {
+    TODAY,
+    WEEK,
+    SAVED
+}
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val _asteroidFilter = MutableLiveData<AsteroidFilter>(AsteroidFilter.WEEK)
 
     private val database = getDatabase(application)
 
     private val asteroidRepository = AsteroidRepository(database)
 
-    val asteroids: LiveData<List<Asteroid>> = asteroidRepository.asteroids
-
+    val asteroids: LiveData<List<Asteroid>> = Transformations.switchMap(_asteroidFilter) { filter ->
+        filter?.let {
+            when (filter) {
+                AsteroidFilter.WEEK -> asteroidRepository.CurrentWeekAsteroids
+                AsteroidFilter.TODAY -> asteroidRepository.TodaysAsteroids
+                AsteroidFilter.SAVED -> asteroidRepository.allAsteroids
+                else -> asteroidRepository.allAsteroids
+            }
+        }
+    }
     val pod: LiveData<PictureOfTheDay> = asteroidRepository.pictureOfTheDay
 
     private val _error_message: MutableLiveData<String?> = MutableLiveData(null)
@@ -68,7 +80,30 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun removePastAsteroids() {
+        viewModelScope.launch {
+            asteroidRepository.deletePastAsteroids()
+            Log.i(TAG, "Asteroids previous of Today has been removed from database")
+        }
+    }
+
+    fun getTodaysAsteroids() {
+        Log.i(TAG, "Displaying todays asteroids")
+        _asteroidFilter.value = AsteroidFilter.TODAY
+    }
+
+    fun getAllAsteroids() {
+        Log.i(TAG, "Displaying all asteroids")
+        _asteroidFilter.value = AsteroidFilter.SAVED
+    }
+
+    fun getWeekAsteroids() {
+        Log.i(TAG, "Displaying week asteroids")
+        _asteroidFilter.value = AsteroidFilter.WEEK
+    }
+
     init {
         getAsteroids()
+        getPOD()
     }
 }

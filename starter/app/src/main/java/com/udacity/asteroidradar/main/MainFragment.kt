@@ -54,16 +54,20 @@ class MainFragment : Fragment() {
         })
 
         viewModel.error_message.observe(viewLifecycleOwner, Observer { errorMessage ->
-            Toast.makeText(context, "Error trying to get data $errorMessage", Toast.LENGTH_LONG)
-                .show()
-            Log.e(TAG, "Error getting asteroids: {${errorMessage}}")
+            errorMessage?.let {
+                Toast.makeText(
+                    context,
+                    "Error trying to get Asteroids data: $errorMessage",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+                Log.e(TAG, "Error getting asteroids: $errorMessage")
+            }
         })
 
         viewModel.pod.observe(viewLifecycleOwner, Observer {
             Log.i(TAG, "Picture ID has changed to: ${it?.url}")
         })
-
-        viewModel.getPOD()
 
         return binding.root
     }
@@ -74,6 +78,11 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.show_today_asteroids -> viewModel.getTodaysAsteroids()
+            R.id.show_saved_asteroids -> viewModel.getAllAsteroids()
+            else -> viewModel.getWeekAsteroids()
+        }
         return true
     }
 }
