@@ -6,13 +6,13 @@ import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfTheDay
 import com.udacity.asteroidradar.api.*
 import com.udacity.asteroidradar.apipod.RetrofitPODInstance
+import com.udacity.asteroidradar.apipod.toDatabaseModel
 import com.udacity.asteroidradar.database.AsteroidDatabase
 import com.udacity.asteroidradar.database.asDomainModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
-private const val TAG = "AsteroidRepository"
 
 class AsteroidRepository(val asteroidDatabase: AsteroidDatabase) {
 

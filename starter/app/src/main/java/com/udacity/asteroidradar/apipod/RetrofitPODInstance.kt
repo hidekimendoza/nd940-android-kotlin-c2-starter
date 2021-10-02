@@ -2,10 +2,10 @@ package com.udacity.asteroidradar.apipod
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.udacity.asteroidradar.Constants
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-private const val POD_URL = "https://api.nasa.gov/"
 
 object RetrofitPODInstance {
     private val moshi = Moshi.Builder()
@@ -14,7 +14,7 @@ object RetrofitPODInstance {
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(POD_URL)
+            .baseUrl(Constants.BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }

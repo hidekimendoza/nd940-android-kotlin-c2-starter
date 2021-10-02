@@ -1,7 +1,7 @@
 package com.udacity.asteroidradar.apipod
 
 import com.udacity.asteroidradar.BuildConfig
-import com.udacity.asteroidradar.api.PODDataTransferObject
+import com.udacity.asteroidradar.apipod.PODDataTransferObject
 import retrofit2.http.GET
 import retrofit2.http.Query
 
