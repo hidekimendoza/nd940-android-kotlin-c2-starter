@@ -38,9 +38,4 @@ class AsteroidRadarApplication : Application() {
         )
     }
 
-
-}
-
-private fun setupRecurringWork() {
-
 }
