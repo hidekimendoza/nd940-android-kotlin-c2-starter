@@ -8,7 +8,7 @@ import androidx.databinding.BindingAdapter
 import com.squareup.picasso.Picasso
 
 @BindingAdapter("pictureOfDayUpdate")
-fun updatePictureOfDay(imageView: ImageView, pod: PictureOfDay?) {
+fun updatePictureOfDay(imageView: ImageView, pod: PictureOfTheDay?) {
     pod?.let {
         Log.i("POD", "${pod}")
         if (pod.mediaType == "video") {

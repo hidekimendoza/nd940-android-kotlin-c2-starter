@@ -1,10 +1,8 @@
 package com.udacity.asteroidradar
 
-import com.squareup.moshi.Json
-
-data class PictureOfDay(
-    @Json(name = "media_type") val mediaType: String,
+data class PictureOfTheDay(
+    val mediaType: String,
     val title: String,
     val url: String,
-    @Json(name = "thumbnail_url") val thumbnailUrl: String? = null
+    val thumbnailUrl: String? = null
 )

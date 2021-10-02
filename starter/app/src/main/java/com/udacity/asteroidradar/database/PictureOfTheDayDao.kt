@@ -7,10 +7,10 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface AsteroidDao {
-    @Query("select * from asteroids_table")
-    fun getAsteroids(): LiveData<List<DatabaseAsteroid>>
+interface PictureOfTheDayDao {
+    @Query("SELECT * FROM picture_of_the_day_table WHERE id = 0")
+    fun getPictureOfTheDay(): LiveData<DatabasePictureOfTheDay>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllAsteroids(vararg asteroids: DatabaseAsteroid)
+    fun insertPictureOfTheDay(pictureOfTheDay: DatabasePictureOfTheDay)
 }
