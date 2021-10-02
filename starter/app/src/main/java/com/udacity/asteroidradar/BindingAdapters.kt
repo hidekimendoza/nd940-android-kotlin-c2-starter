@@ -33,8 +33,10 @@ fun setAsteroidsProgressBar(progressBar: ProgressBar, status: Boolean) {
 fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {
         imageView.setImageResource(R.drawable.ic_status_potentially_hazardous)
+        imageView.contentDescription = R.string.potentially_hazardous_asteroid_image.toString()
     } else {
         imageView.setImageResource(R.drawable.ic_status_normal)
+        imageView.contentDescription = R.string.not_hazardous_asteroid_image.toString()
     }
 }
 
